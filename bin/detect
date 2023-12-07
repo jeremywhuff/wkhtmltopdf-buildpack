@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# The detect script must accept one positional argument:
+# 1. PLAN_PATH: A file containing the Build Plan
+
+PLAN_PATH=$1
+
+# Check for a specific file or environment variable that indicates
+# that the application needs wkhtmltopdf. For simplicity, we're
+# not performing any specific checks in this example.
+
+# If the buildpack applies, it must exit with code 0 and write a
+# build plan to $PLAN_PATH. Otherwise, it exits with code 100.
+
+# Here, we'll assume the buildpack always applies. In a real-world
+# scenario, you'd add logic to determine applicability.
+
+cat > "$PLAN_PATH" <<EOL
+[[provides]]
+name = "wkhtmltopdf"
+EOL
+
+exit 0

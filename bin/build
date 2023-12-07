@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# The build script must accept three positional arguments
+# 1. LAYERS_DIR: The directory where the buildpack can store layers
+# 2. PLAN_PATH: A file containing the Build Plan
+# 3. PLATFORM_DIR: A directory containing platform provided configuration, such as environment variables
+
+LAYERS_DIR=$1
+PLAN_PATH=$2
+PLATFORM_DIR=$3
+
+# Create a layer for wkhtmltopdf
+WKHTMLTOPDF_LAYER_DIR="${LAYERS_DIR}/wkhtmltopdf"
+mkdir -p "${WKHTMLTOPDF_LAYER_DIR}"
+
+# Use a layer.toml file to cache the layer
+cat > "${WKHTMLTOPDF_LAYER_DIR}/layer.toml" <<EOL
+# layer.toml
+cache = true
+build = true
+launch = true
+EOL
+
+# Function to install wkhtmltopdf
+install_wkhtmltopdf() {
+    echo "-----> Installing wkhtmltopdf"
+
+    # Download wkhtmltopdf
+    WKHTMLTOPDF_DOWNLOAD_URL="https://downloads.wkhtmltopdf.org/0.12/0.12.6/wkhtmltox_0.12.6-1.buster_amd64.deb"
+    wget -q -O "${WKHTMLTOPDF_LAYER_DIR}/wkhtmltox.deb" "$WKHTMLTOPDF_DOWNLOAD_URL"
+
+    # Install wkhtmltopdf
+    dpkg -i "${WKHTMLTOPDF_LAYER_DIR}/wkhtmltox.deb"
+
+    echo "       wkhtmltopdf installed"
+}
+
+# Check if wkhtmltopdf is already installed
+if ! command -v wkhtmltopdf &> /dev/null; then
+    install_wkhtmltopdf
+else
+    echo "-----> wkhtmltopdf already installed"
+fi
+
+# The build script must end with exit code 0 on success
+exit 0
