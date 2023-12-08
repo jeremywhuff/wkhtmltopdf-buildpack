@@ -1,31 +1,11 @@
-api = "0.5"
+api = "0.12"
+WithWindowsBuild = false
+WithLinuxBuild = false
 
 [buildpack]
-id = "example/wkhtmltopdf"
-version = "0.0.1"
-name = "wkhtmltopdf Buildpack"
+  id = "wkhtmltopdf-buildpack"
+  version = "1.0.0"
 
-# Stacks are the base images that your buildpack can run on
-[[stacks]]
-id = "io.buildpacks.stacks.bionic"
-# You can add more stacks as needed
-
-# Specify any dependencies that your buildpack has. In this case,
-# wkhtmltopdf is not a dependency fetched by the buildpack but installed
-# via a package manager, so we don't list it here.
-# However, if you were distributing wkhtmltopdf directly, you'd list it like this:
-# [[metadata.dependencies]]
-#   id = "wkhtmltopdf"
-#   version = "0.12.6"
-#   uri = "https://example.com/path/to/wkhtmltopdf.tar.gz"
-#   sha256 = "..."
-#   stacks = ["io.buildpacks.stacks.bionic", "..."]
-
-# Define the order in which buildpacks are executed if this buildpack
-# is part of a builder or a group of buildpacks
-[[order]]
-
-# In this simple example, the buildpack can run alone
-[[order.group]]
-id = "example/wkhtmltopdf"
-version = "0.0.1"
+[[targets]]
+  os = "darwin"
+  arch = "arm64"
